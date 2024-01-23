@@ -85,13 +85,13 @@ public class JobsService implements JobServiceI {
                 String description = jsonNode.path("description").asText();
                 String datePosted = jsonNode.path("datePosted").asText();
                 if (!"".equals(location)) {
-                    hit.setLocation(location.replace("xe9", ""));
+                    hit.setLocation(location);
                 }
                 if (!"".equals(description)) {
-                    hit.setDescription(description.replace("xe9", ""));
+                    hit.setDescription(description);
                 }
                 if (!"".equals(datePosted)) {
-                    hit.setDatePosted(datePosted.replace("xe9", ""));
+                    hit.setDatePosted(datePosted);
                 }
             }
         } catch (IOException e) {
