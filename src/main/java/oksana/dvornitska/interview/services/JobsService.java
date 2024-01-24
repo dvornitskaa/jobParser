@@ -1,5 +1,6 @@
 package oksana.dvornitska.interview.services;
 
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -78,6 +79,10 @@ public class JobsService implements JobServiceI {
             Document document = Jsoup.parse(response);
             Elements scriptElements = document.select(cssQuery);
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(
+                    JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(),
+                    true
+            );
             for (Element script : scriptElements) {
                 String jsonContent = script.html();
                 JsonNode jsonNode = objectMapper.readTree(jsonContent);
@@ -134,7 +139,6 @@ public class JobsService implements JobServiceI {
         try {
             jobRepository.save(job);
         } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
             log.error(String.format("Job with object_id: %s is already saved", hit.getObjectID()));
         }
     }

@@ -26,4 +26,4 @@ To configure communications with a database, the following environment variables
 
 ## Database dump
 
-File [mysql_dump.scv](mysql_dump.scv) contains the database dump with 17 job records as example.
+File [mysql_dump_1.scv](mysql_dump_1.scv) contains the database dump with 59 job records for IT and Product functions as example.

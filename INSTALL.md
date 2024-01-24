@@ -9,7 +9,7 @@ For building and running the application you need:
 
 * 🔄 [Clone](https://www.git-scm.com/docs/git-clone) the repository using [Git](https://git-scm.com/downloads)
 ```
-git clone https://github.com/Microsoft/containers-rest-cosmos-appservice-java.git
+git clone https://github.com/dvornitskaa/jobParser
 ```
 
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the [InterviewApplication.java](src%2Fmain%2Fjava%2Foksana%2Fdvornitska%2Finterview%2FInterviewApplication.java)`oksana.dvornitska.interview.InterviewApplication` class from your IDE.
