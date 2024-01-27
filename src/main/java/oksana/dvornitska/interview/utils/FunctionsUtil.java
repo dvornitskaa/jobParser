@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -20,15 +19,15 @@ import java.util.List;
 
 @Data
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FunctionsUtil {
 
-    final static String SELECTOR = "button.sc-beqWaB.cTPvSS";
-    final static String FILE_PATH = "src/main/resources/filters/filters.txt";
-    final static String REPLACEMENT_1 = "+";
-    final static String REPLACEMENT_2 = "%26";
-    final static String TARGET_1 = " ";
-    final static String TARGET_2 = "&";
+    static String SELECTOR = "button.sc-beqWaB.cTPvSS";
+    static String FILE_PATH = "src/main/resources/filters/filters.txt";
+    static String REPLACEMENT_1 = "+";
+    static String REPLACEMENT_2 = "%26";
+    static String TARGET_1 = " ";
+    static String TARGET_2 = "&";
 
 
     @SneakyThrows

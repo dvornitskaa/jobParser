@@ -41,6 +41,17 @@ public class JobsService implements JobServiceI {
     @Autowired
     JobRepository jobRepository;
 
+    final static String FUNCTION_DELIMITER = "%22+OR+job_functions%3A%22";
+    final static String JOB_LOCATION = "jobLocation";
+    final static String DESCRIPTION = "description";
+    final static String DATE_POSTED = "datePosted";
+    final static String ADDRESS = "address";
+    final static String ADDRESS_LOCALITY = "addressLocality";
+    static String REPLACEMENT_1 = "+";
+    static String REPLACEMENT_2 = "%26";
+    static String TARGET_1 = " ";
+    static String TARGET_2 = "&";
+
     @Value("${jobs.url}")
     String url;
     @Value("${css.query}")
@@ -53,19 +64,19 @@ public class JobsService implements JobServiceI {
     @Override
     @SneakyThrows
     public ResponseDto getJobs(List<String> functions, String hits) {
-        String jobFunctions = String.join("%22+OR+job_functions%3A%22", functions);
-        jobFunctions = jobFunctions.replace(" ", "+").replace("&", "%26");
+        String jobFunctions = String.join(FUNCTION_DELIMITER, functions);
+        jobFunctions = jobFunctions.replace(TARGET_1, REPLACEMENT_1).replace(TARGET_2, REPLACEMENT_2);
         url = url.replace(jobFunctionsReplace, jobFunctions).replace(hitsPerPage, hits);
         String response = apiUtil.getRequest(url);
         Gson gson = new Gson();
         ResponseDto responseDto = gson.fromJson(response, ResponseDto.class);
-        for (ResultDto result : responseDto.getResults()) {
-            for (HitDto hit : result.getHits()) {
-                log.info(String.format("save hit %s", hit.getObjectID()));
-                parseHit(hit);
-                saveHit(hit);
-            }
-        }
+        responseDto.getResults().parallelStream()
+                .flatMap(result -> result.getHits().stream())
+                .forEach(hit -> {
+                    log.info(String.format("save hit %s", hit.getObjectID()));
+                    parseHit(hit);
+                    saveHit(hit);
+                });
         return responseDto;
     }
 
@@ -77,16 +88,13 @@ public class JobsService implements JobServiceI {
             Document document = Jsoup.parse(response);
             Elements scriptElements = document.select(cssQuery);
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(
-                    JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(),
-                    true
-            );
+            objectMapper.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
             for (Element script : scriptElements) {
                 String jsonContent = script.html();
                 JsonNode jsonNode = objectMapper.readTree(jsonContent);
-                String location = jsonNode.path("jobLocation").path("address").path("addressLocality").asText();
-                String description = jsonNode.path("description").asText();
-                String datePosted = jsonNode.path("datePosted").asText();
+                String location = jsonNode.path(JOB_LOCATION).path(ADDRESS).path(ADDRESS_LOCALITY).asText();
+                String description = jsonNode.path(DESCRIPTION).asText();
+                String datePosted = jsonNode.path(DATE_POSTED).asText();
                 if (!"".equals(location)) {
                     hit.setLocation(location);
                 }
