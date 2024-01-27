@@ -29,7 +29,7 @@ public class JobsController {
 
     @GetMapping
     public ResponseEntity<ResponseDto> getJobs(@RequestParam List<String> functions) {
-        return ResponseEntity.ok(jobService.getJobs(functions,hitsStandard));
+        return ResponseEntity.ok(jobService.getJobs(functions, hitsStandard));
     }
 
     @GetMapping("all")

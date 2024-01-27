@@ -1,14 +1,14 @@
 package oksana.dvornitska.interview.utils;
 
-import com.google.gson.Gson;
-import okhttp3.*;
-import oksana.dvornitska.interview.dtos.HitDto;
-import oksana.dvornitska.interview.dtos.ResponseDto;
-import oksana.dvornitska.interview.dtos.ResultDto;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Slf4j
 @Service
 public class ApiUtil {
 
@@ -21,6 +21,7 @@ public class ApiUtil {
             if (response.isSuccessful()) {
                 return response.body().string();
             } else {
+                log.error("Unexpected response: " + response.code());
                 throw new IOException("Unexpected response: " + response.code());
             }
         }

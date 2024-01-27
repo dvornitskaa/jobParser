@@ -23,8 +23,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FunctionsUtil {
 
-    static String selector = "button.sc-beqWaB.cTPvSS";
+    final static String SELECTOR = "button.sc-beqWaB.cTPvSS";
     final static String FILE_PATH = "src/main/resources/filters/filters.txt";
+    final static String REPLACEMENT_1 = "+";
+    final static String REPLACEMENT_2 = "%26";
+    final static String TARGET_1 = " ";
+    final static String TARGET_2 = "&";
+
 
     @SneakyThrows
     @PostConstruct
@@ -32,10 +37,10 @@ public class FunctionsUtil {
         List<String> functions = new ArrayList<>();
         String html = String.join("", Files.readAllLines(Paths.get(FILE_PATH), StandardCharsets.UTF_8));
         Document document = Jsoup.parse(html);
-        Elements buttons = document.select(selector);
+        Elements buttons = document.select(SELECTOR);
         for (Element button : buttons) {
             String buttonText = button.text();
-            buttonText = buttonText.replace(" ", "+").replace("&", "%26");
+            buttonText = buttonText.replace(TARGET_1, REPLACEMENT_1).replace(TARGET_2, REPLACEMENT_2);
             functions.add(buttonText);
         }
         return functions;
