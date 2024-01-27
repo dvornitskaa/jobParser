@@ -1,12 +1,9 @@
 package oksana.dvornitska.interview.dtos;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +13,8 @@ public class HitDto {
 
     String objectID;
 
-    Integer created_at;
+    @SerializedName("created_at")
+    Integer createdAt;
 
     String datePosted;
 
@@ -30,8 +28,10 @@ public class HitDto {
 
     String description;
 
-    HighlightDto _highlightResult;
+    @SerializedName("_highlightResult")
+    HighlightDto highlightResult;
 
-    Boolean has_description;
+    @SerializedName("has_description")
+    Boolean hasDescription;
 
 }

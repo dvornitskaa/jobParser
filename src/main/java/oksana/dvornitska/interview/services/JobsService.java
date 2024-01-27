@@ -57,18 +57,16 @@ public class JobsService implements JobServiceI {
         jobFunctions = jobFunctions.replace(" ", "+").replace("&", "%26");
         url = url.replace(jobFunctionsReplace, jobFunctions).replace(hitsPerPage, hits);
         String response = apiUtil.getRequest(url);
-        if (response != null) {
-            Gson gson = new Gson();
-            ResponseDto responseDto = gson.fromJson(response, ResponseDto.class);
-            for (ResultDto result : responseDto.getResults()) {
-                for (HitDto hit : result.getHits()) {
-                    parseHit(hit);
-                    saveHit(hit);
-                }
+        Gson gson = new Gson();
+        ResponseDto responseDto = gson.fromJson(response, ResponseDto.class);
+        for (ResultDto result : responseDto.getResults()) {
+            for (HitDto hit : result.getHits()) {
+                log.info(String.format("save hit %s", hit.getObjectID()));
+                parseHit(hit);
+                saveHit(hit);
             }
-            return responseDto;
         }
-        return new ResponseDto();
+        return responseDto;
     }
 
     @Override
@@ -112,18 +110,18 @@ public class JobsService implements JobServiceI {
         if (hit.getTitle() != null) {
             job.setTitle(hit.getTitle());
         }
-        if (hit.getHas_description()) {
+        if (hit.getHasDescription()) {
             job.setOrganisationUrl(hit.getUrl());
         } else {
             job.setUrl(hit.getUrl());
         }
-        if (hit.getOrganization().getLogo_url() != null) {
-            job.setLogo(hit.getOrganization().getLogo_url());
+        if (hit.getOrganization().getLogoUrl() != null) {
+            job.setLogo(hit.getOrganization().getLogoUrl());
         }
         if (hit.getOrganization().getName() != null) {
-        job.setOrganisationTitle(hit.getOrganization().getName());
+            job.setOrganisationTitle(hit.getOrganization().getName());
         }
-        job.setLaborFunction(hit.get_highlightResult().getJob_functions().stream()
+        job.setLaborFunction(hit.getHighlightResult().getJobFunctions().stream()
                 .map(JobFunction::getValue)
                 .collect(Collectors.joining(", ")));
         if (hit.getLocation() != null) {
@@ -135,7 +133,7 @@ public class JobsService implements JobServiceI {
         if (hit.getDescription() != null) {
             job.setDescription(hit.getDescription());
         }
-        job.setTags(String.join("", hit.getOrganization().getIndustry_tags()));
+        job.setTags(String.join("", hit.getOrganization().getIndustryTags()));
         try {
             jobRepository.save(job);
         } catch (DataIntegrityViolationException e) {

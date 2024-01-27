@@ -19,11 +19,12 @@ public class ApiUtil {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                return response.body().string();
-            } else {
-                log.error("Unexpected response: " + response.code());
-                throw new IOException("Unexpected response: " + response.code());
+                if (response.body() != null) {
+                    return response.body().string();
+                }
             }
+            log.error("Unexpected response: " + response.code());
+            throw new IOException("Unexpected response: " + response.code());
         }
     }
 }

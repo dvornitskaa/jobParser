@@ -1,5 +1,6 @@
 package oksana.dvornitska.interview.dtos;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,5 +15,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HighlightDto {
 
-    List<JobFunction> job_functions;
+    @SerializedName("job_functions")
+    List<JobFunction> jobFunctions;
+
 }

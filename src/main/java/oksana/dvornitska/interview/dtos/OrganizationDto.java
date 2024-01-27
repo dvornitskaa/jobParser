@@ -1,5 +1,6 @@
 package oksana.dvornitska.interview.dtos;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,10 @@ public class OrganizationDto {
 
     String name;
 
-    String logo_url;
+    @SerializedName("logo_url")
+    String logoUrl;
 
-    List<String> industry_tags;
+    @SerializedName("industry_tags")
+    List<String> industryTags;
 
 }
